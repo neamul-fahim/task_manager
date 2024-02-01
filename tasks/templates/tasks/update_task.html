@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Task</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background-color: #ffffff;
+        color: #000;
+      }
+
+      .container {
+        margin: 20px;
+      }
+
+      h1 {
+        color: #000000;
+        text-align: center;
+      }
+
+      h2 {
+        color: #ffffff;
+      }
+
+      .task-form-container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #333;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #000000;
+        color: #ffffff;
+      }
+
+      button {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #333;
+      }
+
+      #image-preview-container,
+      #existing-images-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .image-preview,
+      .existing-image {
+        max-width: 100%;
+        max-height: 100px;
+        margin: 8px;
+      }
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px; /* Optional: Add some space below the checkbox */
+        font-size: 15px;
+        color: #ffffff
+      }
+      input[type="checkbox"] {
+        margin-right: 80%; /* Adjust this value to control the spacing */
+      }
+
+      {% comment %} #is_complete {
+        margin-right: 8px;
+        margin-top: 8px;
+        align-self: flex-start;
+      } {% endcomment %}
+      input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Update Task</h1>
+      <div class="task-form-container">
+        <h2>Update Task</h2>
+        <form id="updateTaskForm">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required />
+
+          <label for="description">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            required
+            rows="6"
+          ></textarea>
+
+          <label for="photos">Photos:</label>
+          <input
+            type="file"
+            id="photos"
+            name="photos"
+            accept="image/*"
+            multiple
+            onchange="previewImages()"
+          />
+          <div
+            class="image-preview-container"
+            id="image-preview-container"
+          ></div>
+
+          <label for="existing-images">Existing Photos:</label>
+          <div
+            class="existing-images-container"
+            id="existing-images-container"
+          ></div>
+
+          <label for="due_date">Due Date:</label>
+          <input type="datetime-local" id="due_date" name="due_date" required />
+
+          <label for="priority">Priority:</label>
+          <select id="priority" name="priority" required>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+
+          <div class="checkbox-container">
+            <p>Is Complete</p>
+            <input type="checkbox" name="is_complete" />
+          </div>
+
+          <button type="button" onclick="updateTask()">Update Task</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      async function getTaskDetails(taskID) {
+        const csrfToken = getCookie("csrftoken");
+        const response = await fetch(`/task/${taskID}/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch task details");
+          return null;
+        }
+
+        const taskDetails = await response.json();
+        return taskDetails;
+      }
+
+      async function fillFormWithTaskDetails() {
+        const taskID = getTaskIdFromQuery();
+        const taskDetails = await getTaskDetails(taskID);
+
+        if (taskDetails) {
+          document.getElementById("title").value = taskDetails.title;
+          document.getElementById("description").value =
+            taskDetails.description;
+
+          // Format the due date to be compatible with the input field
+          const formattedDueDate = new Date(taskDetails.due_date)
+            .toISOString()
+            .slice(0, -8);
+          document.getElementById("due_date").value = formattedDueDate;
+
+          document.getElementById("priority").value = taskDetails.priority;
+          document.getElementById("is_complete").checked =
+            taskDetails.is_complete;
+
+          // Populate existing images
+          const existingImagesContainer = document.getElementById(
+            "existing-images-container"
+          );
+
+          taskDetails.photos.forEach((photo) => {
+            const existingImage = document.createElement("img");
+            existingImage.src = photo.image;
+            existingImage.className = "existing-image";
+            existingImagesContainer.appendChild(existingImage);
+          });
+
+          // You can implement the logic for displaying existing photos here
+        }
+      }
+
+      function previewImages() {
+        const input = document.getElementById("photos");
+        const previewContainer = document.getElementById(
+          "image-preview-container"
+        );
+
+        // Clear existing previews
+        previewContainer.innerHTML = "";
+
+        const files = input.files;
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const preview = document.createElement("img");
+            preview.src = e.target.result;
+            preview.className = "image-preview";
+            previewContainer.appendChild(preview);
+          };
+
+          reader.readAsDataURL(file);
+        }
+      }
+
+      async function updateTask() {
+        const taskID = getTaskIdFromQuery();
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const photosInput = document.getElementById("photos");
+        const dueDate = document.getElementById("due_date").value;
+        const priority = document.getElementById("priority").value;
+        const isComplete = document.getElementById("is_complete").checked;
+
+        // Collect selected photos
+        const photos = [];
+        for (let i = 0; i < photosInput.files.length; i++) {
+          photos.push(photosInput.files[i]);
+        }
+
+        const data = new FormData();
+        data.append("title", title);
+        data.append("description", description);
+        for (let i = 0; i < photos.length; i++) {
+          data.append("photos", photos[i]);
+        }
+        data.append("due_date", dueDate);
+        data.append("priority", priority);
+        data.append("is_complete", isComplete);
+
+        const csrfToken = getCookie("csrftoken");
+
+        fetch(`/task/${taskID}/`, {
+          method: "PUT",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+          body: data,
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.href = "/home_page/";
+            } else {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert(`Error: ${error.message}`);
+          });
+      }
+
+      function getTaskIdFromQuery() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get("taskID");
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fillFormWithTaskDetails();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Task</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background-color: #ffffff;
+        color: #000;
+      }
+
+      .container {
+        margin: 20px;
+      }
+
+      h1 {
+        color: #000000;
+        text-align: center;
+      }
+
+      h2 {
+        color: #ffffff;
+      }
+
+      .task-form-container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #333;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #000000;
+        color: #ffffff;
+      }
+
+      button {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #333;
+      }
+
+      #image-preview-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .image-preview {
+        max-width: 100%;
+        max-height: 100px;
+        margin: 8px;
+      }
+      input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Create New Task</h1>
+      <div class="task-form-container">
+        <h2>Create Task</h2>
+        <form id="createTaskForm">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required />
+
+          <label for="description">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            required
+            rows="6"
+          ></textarea>
+
+          <label for="photos">Photos:</label>
+          <input
+            type="file"
+            id="photos"
+            name="photos"
+            accept="image/*"
+            multiple
+            onchange="previewImages()"
+          />
+          <div
+            class="image-preview-container"
+            id="image-preview-container"
+          ></div>
+
+          <label for="due_date">Due Date:</label>
+          <input type="datetime-local" id="due_date" name="due_date" required />
+
+          <label for="priority">Priority:</label>
+          <select id="priority" name="priority" required>
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+
+          <button type="button" onclick="createTask()">Create Task</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      function previewImages() {
+        const input = document.getElementById("photos");
+        const previewContainer = document.getElementById(
+          "image-preview-container"
+        );
+
+        // Clear existing previews
+        previewContainer.innerHTML = "";
+
+        const files = input.files;
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const preview = document.createElement("img");
+            preview.src = e.target.result;
+            preview.className = "image-preview";
+            previewContainer.appendChild(preview);
+          };
+
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function createTask() {
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const photosInput = document.getElementById("photos");
+        const dueDate = document.getElementById("due_date").value;
+        const priority = document.getElementById("priority").value;
+
+        // Collect selected photos
+        const photos = [];
+        for (let i = 0; i < photosInput.files.length; i++) {
+          photos.push(photosInput.files[i]);
+        }
+
+        const data = new FormData();
+        data.append("title", title);
+        data.append("description", description);
+        for (let i = 0; i < photos.length; i++) {
+          data.append("photos", photos[i]);
+        }
+        data.append("due_date", dueDate);
+        data.append("priority", priority);
+
+        const csrfToken = getCookie("csrftoken");
+
+        fetch(`/task/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+          body: data,
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.href = "/home_page/";
+            } else {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert(`Error: ${error.message}`);
+          });
+      }
+    </script>
+  </body>
+</html>
