@@ -17,8 +17,6 @@ urlpatterns = [
          name='home_page'),
     path('user/', views.UserAPIView.as_view(),
          name='user'),
-    # path('task/<int:article_id>/',
-    #      views.UpdateTaskAPIView.as_view(), name='update_task'),
     path('update_task_page/', views.UpdateTaskPageView.as_view(),
          name='update_task_page'),
     path('search_page/', views.SearchPageView.as_view(), name='search-page'),
@@ -30,6 +28,4 @@ urlpatterns = [
     path('photos/<int:task_id>/', views.PhotosAPIView.as_view(), name='photos'),
     path('photos/<int:task_id>/<int:photo_id>/',
          views.PhotosAPIView.as_view(), name='photos'),
-
-
 ]

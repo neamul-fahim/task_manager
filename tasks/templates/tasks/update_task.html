@@ -153,7 +153,7 @@
 
           <div class="checkbox-container">
             <p>Is Complete</p>
-            <input type="checkbox" name="is_complete" />
+            <input type="checkbox" id="is_complete" name="is_complete" />
           </div>
 
           <button type="button" onclick="updateTask()">Update Task</button>
@@ -201,6 +201,7 @@
       async function fillFormWithTaskDetails() {
         const taskID = getTaskIdFromQuery();
         const taskDetails = await getTaskDetails(taskID);
+        console.log("taskDetails", { taskDetails });
 
         if (taskDetails) {
           document.getElementById("title").value = taskDetails.title;

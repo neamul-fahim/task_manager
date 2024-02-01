@@ -100,9 +100,25 @@
       .add-photos-button:hover {
         background-color: #333333;
       }
+      button {
+        background-color: #000000;
+        color: #ffffff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #333333;
+      }
     </style>
   </head>
   <body>
+    <button onclick="goToHomePage()">Back to Home</button>
+
     <h1>Task Photos Page</h1>
 
     <div id="photo-container" class="photo-container">
@@ -129,6 +145,10 @@
     <div id="previewContainer"></div>
 
     <script>
+      function goToHomePage() {
+        // You can modify the URL as needed
+        window.location.href = "/home_page/";
+      }
       function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
