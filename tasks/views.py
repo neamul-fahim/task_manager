@@ -1,3 +1,4 @@
+from django.db.models import Case, When, Value
 import os
 from django.conf import settings
 from django.shortcuts import get_object_or_404
@@ -208,8 +209,14 @@ class TaskAPIView(APIView):
 
         else:
             try:
-                tasks = Task.objects.filter(user=user).order_by('-created_at')
-
+                tasks = Task.objects.filter(user=user).order_by(
+                    Case(
+                        When(priority='high', then=Value(1)),
+                        When(priority='medium', then=Value(2)),
+                        When(priority='low', then=Value(3)),
+                        default=Value(4),
+                    )
+                )
                 creation_date_filter = self.request.query_params.get(
                     'creation_date', None)
                 due_date_filter = self.request.query_params.get(
