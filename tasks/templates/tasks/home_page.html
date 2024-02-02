@@ -434,12 +434,10 @@
       tasks.forEach((task) => {
         const card = document.createElement("div");
         card.className = "card";
-        const formattedDate = new Date(task.created_at)
-          .toISOString()
-          .split("T")[0];
-        const formattedDate_last_update = new Date(task.last_update)
-          .toISOString()
-          .split("T")[0];
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit'};
+
+        const formattedDate = new Date(task.created_at).toLocaleString('en-US', options);
+        const formattedDate_last_update = new Date(task.last_update).toLocaleString('en-US', options);
 
         let photosHTML = "";
         if (task.photos && task.photos.length > 0) {

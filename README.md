@@ -1,8 +1,8 @@
-# task_manager
-
 ## HOW TO SET UP AND RUN THE PROJECT
 
 ---
+
+Live project Link: https://neamulfahim.fun/task_manager
 
 Project configuration and demo videos :
 https://drive.google.com/drive/folders/1qS2WKmTn0qrifNGMaO8pmk33evZ5RaV-?usp=sharing

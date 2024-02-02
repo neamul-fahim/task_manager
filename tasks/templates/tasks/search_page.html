@@ -368,12 +368,10 @@
             data.forEach((result) => {
               const resultCard = document.createElement("div");
               resultCard.className = "search-result";
-              const formattedDate = new Date(result.created_at)
-                .toISOString()
-                .split("T")[0];
-                const formattedDate_last_update = new Date(result.last_update)
-                .toISOString()
-                .split("T")[0];
+              const options = { year: 'numeric', month: '2-digit', day: '2-digit'};
+
+              const formattedDate = new Date(result.created_at).toLocaleString('en-US', options);
+              const formattedDate_last_update = new Date(result.last_update).toLocaleString('en-US', options);
 
               resultCard.innerHTML = `
               <div class="due-date">Due Date: ${new Date(
