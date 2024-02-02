@@ -132,12 +132,18 @@
             } else {
               // Handle error scenarios
               console.error("Error:", response.statusText);
+              alert(
+                "Signup failed. Please check your credentials and try again."
+              );
             }
           })
           .catch((error) => {
             // Hide loading indicator
             document.getElementById("loading-indicator").style.display = "none";
             console.error("Error:", error);
+            alert(
+              "Signup failed. Please check your credentials and try again."
+            );
           });
       }
     </script>
