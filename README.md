@@ -2,7 +2,7 @@
 
 ---
 
-Live project Link: https://neamulfahim.fun/task_manager
+Live project Link: https://neamulfahim.fun
 
 Project configuration and demo videos :
 https://drive.google.com/drive/folders/1qS2WKmTn0qrifNGMaO8pmk33evZ5RaV-?usp=sharing
