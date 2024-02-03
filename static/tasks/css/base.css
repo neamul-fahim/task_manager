@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+
+  #side-drawer {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: -250px; /* Initially hidden off-screen */
+    top: 0;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    transition: left 0.3s; /* Smooth transition for the drawer */
+  }
+
+  #main-content {
+    margin-left: 50px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+  }
+
+  #user-name {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  #user-name-drawer {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .drawer-link {
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+  .drawer-link:hover {
+    background-color: #555;
+  }
+
+  #drawer-icon {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #fff;
+    z-index: 2;
+  }
+
+  /* Adjust the left margin when the drawer is open */
+  #main-content.drawer-open {
+    margin-left: 300px; /* Adjust if necessary */
+    transition: 0.8s;
+  }
+
+  /* Media query for responsiveness */
+  @media screen and (max-width: 600px) {
+    #side-drawer {
+      width: 100%; /* Full width on mobile */
+      left: -100%; /* Initially off-screen */
+    }
+
+    /* Adjust the left margin when the drawer is open */
+    #main-content.drawer-open {
+      margin-left: 0; /* Adjust if necessary */
+    }
+  }

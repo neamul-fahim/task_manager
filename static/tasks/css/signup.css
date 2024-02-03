@@ -1,0 +1,65 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+
+  .signup-container {
+    text-align: center;
+  }
+
+  form {
+    display: inline-block;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff; /* Purple color */
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #000000; /* Purple color */
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  button {
+    background-color: #000000; /* Purple color */
+    color: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #000000; /* Purple color */
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #333; /* Lighter purple color on hover */
+  }
+
+  .login-link {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* Added styles for the loading indicator */
+  #loading-indicator {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+  }

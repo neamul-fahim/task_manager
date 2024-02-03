@@ -5,89 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Filters</title>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        background-color: #ffffff;
-        color: #000;
-      }
-
-      .container {
-        margin: 20px;
-      }
-
-      h1 {
-        color: #000000;
-        text-align: center;
-      }
-
-      .filter-form-container {
-        max-width: 600px;
-        margin: 20px auto;
-        background-color: #333;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-        color: #ffffff;
-      }
-      /* Add this style to your existing CSS */
-      input[type="date"] {
-        position: relative;
-        padding: 12px;
-        margin-bottom: 16px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #000000;
-        color: #ffffff;
-      }
-
-      input[type="date"]::before {
-        content: "\1F4C5"; /* Unicode character for the calendar icon */
-        font-family: "Arial", sans-serif;
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        font-size: 16px;
-        color: #ffffff;
-        pointer-events: none; /* Make sure the icon doesn't interfere with input events */
-      }
-
-      input,
-      select {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 16px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #000000;
-        color: #ffffff;
-      }
-
-      button {
-        background-color: #000000;
-        color: #ffffff;
-        padding: 12px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #333;
-      }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tasks/css/filter_page.css' %}" />
   </head>
   <body>
     <div class="container">
@@ -120,40 +39,6 @@
       </div>
     </div>
 
-    <script>
-      const filters = {
-        creationDate: "",
-        dueDate: "",
-        priority: "",
-        status: "",
-      };
-
-      // Load saved filters from localStorage
-      const savedFilters =
-        JSON.parse(sessionStorage.getItem("taskFilters")) || {};
-      Object.assign(filters, savedFilters);
-
-      // Populate form with saved filters
-      document.getElementById("creationDateFilter").value =
-        filters.creationDate;
-      document.getElementById("dueDateFilter").value = filters.dueDate;
-      document.getElementById("priorityFilter").value = filters.priority;
-      document.getElementById("statusFilter").value = filters.status;
-
-      function applyFilters() {
-        // Update filter values
-        filters.creationDate =
-          document.getElementById("creationDateFilter").value;
-        filters.dueDate = document.getElementById("dueDateFilter").value;
-        filters.priority = document.getElementById("priorityFilter").value;
-        filters.status = document.getElementById("statusFilter").value;
-
-        // Save filters to localStorage
-        sessionStorage.setItem("taskFilters", JSON.stringify(filters));
-
-        // Redirect to the page where you want to display filtered tasks
-        window.location.href = `/home_page/`;
-      }
-    </script>
+    <script src="{% static 'tasks/js/filter_page.js' %}"></script>
   </body>
 </html>
